@@ -8,6 +8,7 @@ class User(sqlobject.SQLObject):
 	bookListId = sqlobject.MultipleJoin('Book', joinColumn='user_id')
 
 	def __repr__(self):
-        	return "name = '{0}', age = '{1}'".format(self.userName, self.age)
+		return "name = '{0}', age = '{1}'".format(self.userName, self.age)
+
 
 User.createTable(ifNotExists=True)
