@@ -7,6 +7,7 @@ conn = None
 
 def establish_connection(save_type_key):
     """ Connect to the database """
+
     db_filename = os.path.abspath("mdata.db")
     global conn
     if save_type_key == "mysql":
@@ -19,4 +20,4 @@ def establish_connection(save_type_key):
         connection_str = "postgres://host" + db_filename
         conn = sqlobject.connectionForURI(connection_str)
 
-    return conn
+    sqlobject.sqlhub.processConnection = conn

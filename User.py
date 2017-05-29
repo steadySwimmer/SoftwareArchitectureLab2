@@ -1,10 +1,10 @@
 import sqlobject
-from Connection import conn 
+import Connection
 
 class User(sqlobject.SQLObject):
-	_connection = conn
+	_connection = Connection.conn
 	userName = sqlobject.StringCol(length=100, unique=False)
 	age = sqlobject.IntCol(default=None)
 	bookListId = sqlobject.IntCol(default=None)
 
-#PhoneNumber.createTable(ifNotExists=True)
+User.createTable(ifNotExists=True)
