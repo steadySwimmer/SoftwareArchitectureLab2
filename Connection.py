@@ -2,22 +2,22 @@
 
 import os
 import sqlobject
+from configuration.configParser import *
 
-conn = None
-
-def establish_connection(save_type_key):
+def establish_connection():
     """ Connect to the database """
-
+    res_dict = config_parser_result()
     db_filename = os.path.abspath("mdata.db")
-    global conn
-    if save_type_key == "mysql":
+
+    if res_dict[save_type_key] == "mysql":
         connection_str = "mysql://host" + db_filename
         conn = sqlobject.connectionForURI(connection_str)
-    elif save_type_key == "sqll":
+    elif res_dict[save_type_key] == "sqll":
         connection_str = "sqlite:" + db_filename
         conn = sqlobject.connectionForURI(connection_str)
-    elif save_type_key == "psql":
+    elif res_dict[save_type_key] == "psql":
         connection_str = "postgres://host" + db_filename
         conn = sqlobject.connectionForURI(connection_str)
 
-    sqlobject.sqlhub.processConnection = conn
+    #sqlobject.sqlhub.processConnection = conn
+    return conn

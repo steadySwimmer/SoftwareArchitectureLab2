@@ -7,7 +7,7 @@ def config_parser_result():
 	dictionary_result = read_from_configs("config")
 
 	if (bool(dictionary_result) == False):
-		dictionary_result = {save_type_key: 'pickle'}
+		dictionary_result = {save_type_key: 'sqll'}
 
 	return dictionary_result
 
@@ -19,7 +19,7 @@ def last_session_save_type():
 	dictionary_result = read_from_configs(".lastSessionData")
 
 	if (bool(dictionary_result) == False):
-		dictionary_result = {last_save_type: 'pickle'}
+		dictionary_result = {last_save_type: 'sqll'}
 
 	return dictionary_result[last_save_type]
 
