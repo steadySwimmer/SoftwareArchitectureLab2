@@ -11,5 +11,6 @@ def establish_connection(save_type_key):
         pass
     elif save_type_key == "sqll":
         conn = sqlobject.sqlite.builder()("test.db")
+        print (conn)
     elif save_type_key == "psql":
         conn = sqlobject == sqlobject.postgres.builder()
