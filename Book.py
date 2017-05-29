@@ -1,11 +1,11 @@
-import sqlobject
-from Connection import conn
+import sqlobject as sql
+import Connection
 
-class Book(sqlobject.SQLObject):
-    # _connection = conn
-    bookName = sqlobject.StringCol(length=100, unique=True)
-    bookAuthor = sqlobject.StringCol(length=100)
-    bookYear = sqlobject.DateCol(default=None)
-    bookRate = sqlobject.SetCol(default=None)
+class Book(sql.SQLObject):
+    _connection = Connection.establish_connection('sqll')
+    bookName = sql.StringCol(length=100, unique=True)
+    bookAuthor = sql.StringCol(length=100)
+    bookYear = sql.DateCol(default=None)
+    bookRate = sql.SetCol(default=None)
 
 Book.createTable(ifNotExists=True)

@@ -1,10 +1,11 @@
 from configuration.configParser import *
-from Connection import establish_connection
+import Connection
 
-from Book import Book
+import Book
+
 if __name__ == '__main__':
 	result_dict = config_parser_result()
 
-	establish_connection(result_dict[save_type_key])
-
-	book = Book(bookName='G', bookAuthor='K')
+	Connection.establish_connection(result_dict[save_type_key])
+	print (Connection.conn)
+	# book = Book(bookName='G', bookAuthor='K')
