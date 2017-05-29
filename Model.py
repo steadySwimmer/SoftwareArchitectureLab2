@@ -2,6 +2,7 @@
 
 import pickle
 import doctest
+from functools import reduce
 from User import User
 from Book import Book
 #from configuration.configParser import last_session_data_save, last_session_save_type
@@ -57,7 +58,7 @@ class Model():
 
         if self._is_username_exists(username):
             raise Exception("[ERROR]::The user already exists.")
-        User(username, age)
+        User(userName=username, age=age)
 
 
     def remove_user(self, username):
@@ -210,9 +211,10 @@ class Model():
         """
         if not self._is_book_title_exists(book_title):
             raise Exception("[ERROR]::There is no book with given title.")
-        index = self.__books_list.index([item for item in self.__books_list \
-                                             if item.book_name == book_title][0])
-        self.__books_list[index].rate = rate
+        book = Book.select(Book.q.bookName == book_title)[0]
+        book.bookRate = book.bookRate + " " + str(rate) if book.bookRate is not None else str(rate) 
+        rates = book.bookRate.split()
+        return reduce(lambda x, y: int(x) + int(y), rates) / len(rates) if len(rates) > 1 else rate
 
     def load(self):
         """ Load information about library users and books
