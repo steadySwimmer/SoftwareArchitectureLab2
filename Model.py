@@ -27,7 +27,7 @@ class Model():
     @property
     def user_list(self):
         """ list: Contains the list of library users. """
-        
+
         return list(User.select())
 
 
@@ -102,7 +102,7 @@ class Model():
         """
         if self._is_book_title_exists(title):
             raise Exception("[ERROR]::The book already exists.")
-        Book(title, author, year)
+        Book(bookName=title, bookAuthor=author, bookYear=year)
 
 
     def remove_book(self, title):
@@ -248,12 +248,12 @@ class Model():
 
 
     def _is_username_exists(self, username):
-        number = User.select(User.q.username==username).count()
+        number = User.select(User.q.userName==username).count()
         return True if number > 0 else False
 
 
     def _is_book_title_exists(self, book_title):
-        number = Book.select(Book.q.title==book_title).count()
+        number = Book.select(Book.q.bookName==book_title).count()
         return True if number > 0 else False
 
     # this method created for test

@@ -8,5 +8,3 @@ if __name__ == '__main__':
 	result_dict = config_parser_result()
 
 	model = Model()
-
-	print (model.book_list)

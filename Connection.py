@@ -19,5 +19,4 @@ def establish_connection():
         connection_str = "postgres://host" + db_filename
         conn = sqlobject.connectionForURI(connection_str)
 
-    #sqlobject.sqlhub.processConnection = conn
     return conn
