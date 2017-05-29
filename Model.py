@@ -2,10 +2,9 @@
 
 import pickle
 import doctest
-import Serialize as srz
 from User import User
 from Book import Book
-from configuration.configParser import last_session_data_save, last_session_save_type
+#from configuration.configParser import last_session_data_save, last_session_save_type
 
 class Model:
     """ Class Model controls all operation on users and books in the library.
@@ -33,13 +32,13 @@ class Model:
     @property
     def user_list(self):
         """ list: Contains the list of library users. """
-        return self.__users_list
+        return list(User.select())
 
 
     @property
     def book_list(self):
         """ list: Contains the list of books in a library. """
-        return self.__books_list
+        return list(Book.select())
 
 
     def create_user(self, username, age):
@@ -59,9 +58,10 @@ class Model:
             Traceback (most recent call last):
             Exception: [ERROR]::The user already exists.
         """
+
         if self._is_username_exists(username):
             raise Exception("[ERROR]::The user already exists.")
-        self.__users_list.append(User(username, age))
+        User(username, age)
 
 
     def remove_user(self, username):
@@ -82,7 +82,7 @@ class Model:
         """
         if not self._is_username_exists(username):
             raise Exception("[ERROR]::There is no user with such name.")
-        self.__users_list = [user for user in self.__users_list if user.user_name != username]
+        User.delete(username)
 
 
     def add_book(self, title, author, year=None):
@@ -106,7 +106,7 @@ class Model:
         """
         if self._is_book_title_exists(title):
             raise Exception("[ERROR]::The book already exists.")
-        self.__books_list.append(Book(title, author, year))
+        Book(title, author, year)
 
 
     def remove_book(self, title):
@@ -252,13 +252,13 @@ class Model:
 
 
     def _is_username_exists(self, username):
-        user_name = [user for user in self.__users_list if user.user_name == username]
-        return True if user_name else False
+        number = User.select(User.q.username==username).count()
+        return True if number > 0 else False
 
 
     def _is_book_title_exists(self, book_title):
-        title = [book for book in self.__books_list if book.book_name == book_title]
-        return True if title else False
+        number = Book.select(Book.q.title==book_title).count()
+        return True if number > 0 else False
 
     # this method created for test
     def _show_list(self, lst):
