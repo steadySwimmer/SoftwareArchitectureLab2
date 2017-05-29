@@ -6,7 +6,7 @@ from User import User
 from Book import Book
 #from configuration.configParser import last_session_data_save, last_session_save_type
 
-class Model:
+class Model():
     """ Class Model controls all operation on users and books in the library.
 
     Attributes:
@@ -14,24 +14,20 @@ class Model:
         __books_list(list): List of books available in the library.
     """
 
-    def __init__(self, filename, serialization_type):
+    def __init__(self):
         """ Initialize Model class
 
         Args:
             filename(str): Set name of the file which is used to upload
                 information about library.
         """
-        self.__users_list = []
-        self.__books_list = []
-        self.filename = filename
-        self.serialization_type = serialization_type
-        self.load()
         super().__init__()
 
 
     @property
     def user_list(self):
         """ list: Contains the list of library users. """
+        
         return list(User.select())
 
 

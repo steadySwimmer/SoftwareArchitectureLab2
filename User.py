@@ -1,8 +1,8 @@
 import sqlobject
-import Connection
+from Connection import *
 
 class User(sqlobject.SQLObject):
-	_connection = Connection.conn
+	_connection = establish_connection()
 	userName = sqlobject.StringCol(length=100, unique=False)
 	age = sqlobject.IntCol(default=None)
 	bookListId = sqlobject.IntCol(default=None)
