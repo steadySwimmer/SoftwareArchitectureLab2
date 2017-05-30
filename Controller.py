@@ -118,17 +118,17 @@ class Controller:
 		number = self.take_return_book_helper(self.model.book_list)
 		try:
 			chosen_book = self.model.book_list[number]
-			self.model.take_book(chosen_user.user_name, chosen_book.book_name)
+			self.model.take_book(chosen_user.userName, chosen_book.bookName)
 		except TypeError:
 			View.wrong_input()
 
 	def return_book_manager(self, chosen_user):
 		'''Return book process. Returns book to library
 		deletes if from user book list.'''
-		number = self.take_return_book_helper(chosen_user.book_list)
+		number = self.take_return_book_helper(chosen_user.bookListId)
 		try:
-			chosen_book = chosen_user.book_list[number]
-			self.model.return_book(chosen_user.user_name, chosen_book.book_name)
+			chosen_book = chosen_user.bookListId[number]
+			self.model.return_book(chosen_user.userName, chosen_book.bookName)
 		except TypeError:
 			View.wrong_input()
 
@@ -160,7 +160,7 @@ class Controller:
 			View.wrong_input()
 			return
 		user = self.model.user_list[user_number - 1]
-		self.model.remove_user(user.user_name)
+		self.model.remove_user(user.userName)
 
 	def set_book_rate_manager(self):
 		''' Set book rate manager'''
@@ -183,8 +183,8 @@ class Controller:
 			return
 
 		book = self.model.book_list[book_number - 1]
-		book.rate = book_rate
-		print ("New book rate {} for Book {}".format(book.rate, book))
+		result = self.model.feedback(book.bookName, book_rate)
+		print ("New book rate {} for Book {}".format(result, book))
 
 	def create_book_manager(self):
 		'''Method is responsbile for creating a book'''
@@ -219,7 +219,7 @@ class Controller:
 			return
 
 		try:
-			self.model.remove_book(self.model.book_list[book_number - 1].book_name)
+			self.model.remove_book(self.model.book_list[book_number - 1].bookName)
 		except Exception as e:
 			print (e)
 

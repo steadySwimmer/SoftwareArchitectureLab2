@@ -126,9 +126,9 @@ class Model():
         if not self._is_book_title_exists(title):
             raise Exception("[ERROR]::There is no book with shuch title.")
         
-        listOfBooks = Book.select(Book.q.bookName==title)
+        book = Book.select(Book.q.bookName==title)[0]
+        Book.delete(book.id)
 
-        print (listOfBooks)
 
 
     def take_book(self, username, book_title):
@@ -182,7 +182,6 @@ class Model():
         """
         user = User.select(User.q.userName==username)[0]
         book = Book.select(sqlobject.AND (Book.q.bookName==book_title, Book.q.user==user))[0]
-        print (user, book)
         book.user = None
 
 
@@ -200,7 +199,7 @@ class Model():
         book = Book.select(Book.q.bookName == book_title)[0]
         book.bookRate = book.bookRate + " " + str(rate) if book.bookRate is not None else str(rate) 
         rates = book.bookRate.split()
-        return reduce(lambda x, y: int(x) + int(y), rates) / len(rates) if len(rates) > 1 else rate
+        return reduce(lambda x, y: float(x) + float(y), rates) / len(rates) if len(rates) > 1 else rate
 
     def _is_username_exists(self, username):
         number = User.select(User.q.userName==username).count()

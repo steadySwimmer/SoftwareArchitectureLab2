@@ -5,7 +5,7 @@ class Book(SQLObject):
     _connection = establish_connection()
     bookName = StringCol(length=100, unique=True)
     bookAuthor = StringCol(length=100)
-    bookYear = DateCol(default=None)
+    bookYear = IntCol(default=None)
     bookRate = StringCol(default="")
     user = ForeignKey('User', default=None)
 

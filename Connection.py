@@ -10,7 +10,7 @@ def establish_connection():
     db_filename = os.path.abspath("mdata.db")
 
     if res_dict[save_type_key] == "mysql":
-        connection_str = "mysql://host" + db_filename
+        connection_str = "mysql:" + db_filename
         conn = sqlobject.connectionForURI(connection_str)
     elif res_dict[save_type_key] == "sqll":
         connection_str = "sqlite:" + db_filename

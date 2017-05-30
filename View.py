@@ -61,8 +61,8 @@ class View:
 		View.separator_line()
 		for i in range(len(user_list)):
 			user = user_list[i]
-			if user.book_list:
-				print ("{}. {}\n{}".format(i + 1, user, user.book_list))
+			if user.bookListId:
+				print ("{}. {}\n{}".format(i + 1, user, user.bookListId))
 			else:
 				print ("{}. {}".format(i + 1, user))
 
