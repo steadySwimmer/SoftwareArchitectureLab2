@@ -11,19 +11,18 @@ class View:
 	def separator_line():
 		print ("\n|-----------------------------------------------|\n")
 
+
 	@staticmethod
 	def main_menu():
 		View.separator_line()
 		print ("Enter a number to choose the option")
-		print ("1. Choose user.")
-		print ("2. Create user.")
-		print ("3. List of user.")
-		print ("4. Remove user.")
-		print ("5. Choose book.")
-		print ("6. Create book.") 
-		print ("7. List of books.")
-		print ("8. Remove book.")
-		print ("9. Exit.")
+		print ("1. Add product.")
+		print ("2. Remove product.")
+		print ("3. Show detailed info.")
+		print ("4. Show statisics.")
+		print ("5. Update user info.")
+		print ("6. Show current list")
+		print ("7. Exit.")
 		View.separator_line()
 
 	@staticmethod
@@ -31,93 +30,78 @@ class View:
 		View.separator_line()
 		print ("Enter the information about new user\n.")
 
-	@staticmethod
-	def book_create():
-		View.separator_line()
-		print ("Enter the information about new book\n.")
 
 	@staticmethod
-	def take_book():
+	def add_product():
 		View.separator_line()
-		print ("Take a book from the list. The library has only one copy of book.\n\
-				So book can be taken only once or you should wait when someone will\n\
-				return it.")
+		print ("Enter the information about product\n.")
+
 
 	@staticmethod
-	def return_book():
+	def print_user(user):
 		View.separator_line()
-		print ("Choose a book from your list, which you wanna return.")
+		print(user)
+
 
 	@staticmethod
-	def print_users(user_list):
+	def print_products(product_list):
 		View.separator_line()
-		for i in range(len(user_list)):
-			user = user_list[i]
-			print ("{}. {}".format(i + 1, user))
-		View.separator_line()
-
-	@staticmethod
-	def detailed_print_users(user_list):
-		View.separator_line()
-		for i in range(len(user_list)):
-			user = user_list[i]
-			if user.bookListId:
-				print ("{}. {}\n{}".format(i + 1, user, user.bookListId))
-			else:
-				print ("{}. {}".format(i + 1, user))
-
-	@staticmethod
-	def take_return_book():
-		View.separator_line()
-		print ("1. Take book.")
-		print ("2. Return book.")
-
-	@staticmethod
-	def print_books(book_list):
-		View.separator_line()
-		for i in range(0, len(book_list)):
-			book = book_list[i]
-			print ("{}. {}".format(i + 1, book))
+		for i in range(0, product_list.count()):
+			product = product_list[i]
+			print ("{}. {}".format(i + 1, product))
 		View.separator_line()
 
-	@staticmethod
-	def detailed_print_books(book_list):
+
+	def update_user_menu():
 		View.separator_line()
-		for i in range(len(book_list)):
-			book = book_list[i]
-			if (hasattr(book, "owner") and book.owner is not None):
-				print ("{}. {}\nOwner: {}".format(i + 1, book, book.owner))
-			else:
-				print ("{}. {}".format(i + 1, book))
+		print("Enter a number to choose quality for update:")
+		print("1. Name")
+		print("2. Age")
+		print("3. Height")
+		print("4. Weight")
+		print("5. gender")
+		print("6. Activity")
+		print("0. Exit")
 
-	@staticmethod
-	def print_one_user(user):
-		pass
 
-	@staticmethod
-	def print_one_book(book):
-		pass
+	def detailed_info_menu():
+		View.separator_line()
+		print("1. Today")
+		print("2. Particular day")
 
-	@staticmethod
-	def print_user_books(user):
-		pass
+
+	def statisics_menu():
+		View.separator_line()
+		print("1. Today")
+		print("2. Particular day")
+		print("3. Month statistic")
+		print("4. Year statistic")
+
+
+	def print_stat(total, norm):
+		print("Total: {}(calories) Should consume: {}(calories)".format(total, norm))
+
 
 	@staticmethod
 	def success_user_create_message():
 		print ("The user created successfully")
 
+
 	@staticmethod
-	def success_book_create_message():
-		print ("The book creted successfully")
+	def success_product_create_message():
+		print ("The product added successfully")
+
 
 	@staticmethod
 	def wrong_input():
 		print ("The input is invalid")
 
+
 	@staticmethod
 	def wrong_option():
 		print ("No current option.")
 
+
 	@staticmethod
 	def exit_message():
-		print ("Bye, bye))")
+		print ("See you!")

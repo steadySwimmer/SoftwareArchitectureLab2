@@ -1,219 +1,123 @@
 """ Implementation of Model class """
 
-import pickle
 import doctest
+import datetime
+from dateutil.relativedelta import relativedelta
 from functools import reduce
 from User import User
-from Book import Book
+from Product import Product
 import sqlobject
 
 class Model():
-    """ Class Model controls all operation on users and books in the library.
-
-    Attributes:
-        __users_list(list): List of library users.
-        __books_list(list): List of books available in the library.
-    """
 
     def __init__(self):
-        """ Initialize Model class
-
-        Args:
-            filename(str): Set name of the file which is used to upload
-                information about library.
-        """
+        """ Initialize Model class """
         super().__init__()
 
 
     @property
-    def user_list(self):
-        """ list: Contains the list of library users. """
-
+    def show_user(self):
+        """ Show user """
         return list(User.select())
 
 
     @property
-    def book_list(self):
-        """ list: Contains the list of books in a library. """
-        return list(Book.select())
+    def products(self):
+        """ Return all items in the database """
+        return list(Product.select())
 
 
-    def create_user(self, username, age):
-        """ Method  create user and add to user list.
-
-        Args:
-            username(str): Library user's name.
-            age(int): User's age.
-        Raises:
-            Exception: if user with given username already exist.
-
-        Examples:
-            >>> model.create_user("Thor", 29)
-            >>> model._show_list(model.user_list)
-            ['Thor, age: 29']
-            >>> model.create_user("Thor", 1000)
-            Traceback (most recent call last):
-            Exception: [ERROR]::The user already exists.
-        """
-
-        if self._is_username_exists(username):
-            raise Exception("[ERROR]::The user already exists.")
-        User(userName=username, age=age)
+    def setUp(self, name, age, height, weight, gender, actv):
+        """ Set up user """
+        if actv not in [1.2, 1.375, 1.55, 1.7, 1.9]:
+            raise Exception("Activity should be one of these values: 1.2, 1.375, 1.55, 1.7, 1.9.")
+        User(userName=name, age=age, height=height, weight=weight, gender=gender, activity=actv)
 
 
-    def remove_user(self, username):
-        """ Removes user form user list.
-
-        Args:
-            username(str): The name of the deleted user.
-        Raises:
-            Exception: if user with given username does not exist.
-
-        Examples:
-            >>> model.remove_user("Odin")
-            Traceback (most recent call last):
-            Exception: [ERROR]::There is no user with such name.
-            >>> model.remove_user("Thor")
-            >>> model._show_list(model.user_list)
-            []
-        """
-        if not self._is_username_exists(username):
-            raise Exception("[ERROR]::There is no user with such name.")
-        result = User.select(User.q.userName==username)[0]
-        User.delete(result.id)
+    def update_user_param(self, kwargs):
+        """ Update user """
+        if not self._is_user_exists():
+            raise Exception("[ERROR]: You should set up user first.")
+        user = User.get(1)
+        user.userName = kwargs['userName'] if 'userName' in kwargs.keys() else user.userName
+        user.age = kwargs['age'] if 'age' in kwargs.keys() else user.age
+        user.height = kwargs['height'] if 'height' in kwargs.keys() else user.height
+        user.weight = kwargs['weight'] if 'weight' in kwargs.keys() else user.weight
+        user.gender = kwargs['gender'] if 'gender' in kwargs.keys() else user.gender
+        user.activity = kwargs['activity'] if 'activity' in kwargs.keys() else user.activity
 
 
-    def add_book(self, title, author, year=None):
-        """ Add new book to the library.
-
-        Args:
-            title(str): Book's title.
-            author(str): Book's author.
-            year(int, optional): The year when book was published
-        Raises:
-            Exception: if book with given title already exists.
-
-        Examples:
-            >>> model.add_book("Dialogs", "Seneka")
-            >>> model.add_book("Dialogs", "Seneka")
-            Traceback (most recent call last):
-            Exception: [ERROR]::The book already exists.
-            >>> model.add_book("Witchcraft: Special edition", "Angry Witcher")
-            >>> model._show_list(model.book_list)
-            ["'Dialogs', author:Seneka;", "'Witchcraft: Special edition', author:Angry Witcher;"]
-        """
-        if self._is_book_title_exists(title):
-            raise Exception("[ERROR]::The book already exists.")
-        Book(bookName=title, bookAuthor=author, bookYear=year)
+    def add_product(self, name, energy_points):
+        """ add product to the database """
+        now = datetime.datetime.now()
+        date = "{}-{}-{}".format(now.year, now.month, now.day)
+        Product(productName=name, energyPoints=energy_points, date=date)
 
 
-    def remove_book(self, title):
-        """ Removes book from the library.
+    def remove_product(self, product_name):
+        now = datetime.datetime.now()
+        date = "{}-{}-{}".format(now.year, now.month, now.day)
+        if not self._is_product_exists(product_name, date):
+            raise Exception("[ERROR]::There is no item with shuch name.")
 
-        Args:
-            title(str): Book's title.
-        Raises:
-            Exception: if book with given title does not exist.
-
-        Examples:
-            >>> model.remove_book("Quantum mechanics: Second Edition")
-            Traceback (most recent call last):
-            Exception: [ERROR]::There is no book with shuch title.
-            >>> model.remove_book("Dialogs")
-            >>> model._show_list(model.book_list)
-            ["'Witchcraft: Special edition', author:Angry Witcher;"]
-        """
-        if not self._is_book_title_exists(title):
-            raise Exception("[ERROR]::There is no book with shuch title.")
-        
-        book = Book.select(Book.q.bookName==title)[0]
-        Book.delete(book.id)
+        item = Product.select(Product.q.productName == product_name)[0]
+        Product.delete(item.id)
 
 
-
-    def take_book(self, username, book_title):
-        """ Adds the book to the user's book list.
-
-        Args:
-            username(str): User's name.
-            book_title(str): Book's title.
-        Raises:
-            Exception: if user with given username does not exist
-                        or book with given title does not exist.
-
-        Examples:
-            >>> model.take_book("Loki", "Witchcraft: Special edition")
-            Traceback (most recent call last):
-            Exception: [ERROR]::There is no such user or book.
-            >>> model.create_user("Loki", 29)
-            >>> model.take_book("Loki", "Witchcraft: Special edition")
-            >>> print(model.book_list[0].owner)
-            Loki, age: 29
-            >>> model.user_list[1]._show_book_list()
-            ["'Witchcraft: Special edition', author:Angry Witcher;"]
-        """
-        
-        user = User.select(User.q.userName==username)[0]
-        book = Book.select(Book.q.bookName==book_title)[0]
-        book.user = user
+    def detailed_info(self, day):
+        date = "{}-{}-{}".format(day['year'], day['month'], day['day'])
+        items = Product.select(Product.q.date == date)
+        total = self.total(day)
+        return (items, total)
 
 
-    def return_book(self, username, book_title):
-        """ Returns book back to the library.
+    def _query(self, kwargs):
 
-        Args:
-            username(str): User's name.
-            book_title(str): Book's title.
-        Raises:
-            Exception: if user with given username does not exist
-                        or book with given title does not exist.
-        Examples:
-            >>> model.create_user("Thor", 29)
-            >>> model.return_book("Thor", "Thunderstorm")
-            Traceback (most recent call last):
-            Exception: [ERROR]::There is no such user or book.
-            >>> model.add_book("Thunderstorm", "Titan")
-            >>> model.take_book("Thor", "Thunderstorm")
-            >>> model.return_book("Thor", "Thunderstorm")
-            >>> print(model.book_list[0].owner)
-            None
-            >>> model.user_list[0]._show_book_list()
-            []
-        """
-        user = User.select(User.q.userName==username)[0]
-        book = Book.select(sqlobject.AND (Book.q.bookName==book_title, Book.q.user==user))[0]
-        book.user = None
+        if len(kwargs) == 3:
+            date = "{}-{}-{}".format(kwargs['year'], kwargs['month'], kwargs['day'])
+            products = Product.select(Product.q.date == date)
+
+        elif "month" in kwargs.keys() and "year" in kwargs.keys():
+            prev_month = datetime.date(kwargs['year'], kwargs['month'], 1) - relativedelta(months=1)
+            next_mounth = datetime.date(kwargs['year'], kwargs['month'], 1) + relativedelta(months=1)
+            products = Product.select(sqlobject.AND(Product.q.date > prev_month,\
+                                     Product.q.date < next_mounth))
+        elif "year" in kwargs.keys():
+            now = datetime.datetime.now()
+            products = Product.select(sqlobject.AND(Product.q.date > datetime.date(kwargs['year'] -1, 12, 31),\
+                                     Product.q.date < datetime.date(kwargs['year'] + 1, 1, 1)))
+
+        return products
 
 
-    def feedback(self, book_title, rate):
-        """ Sets rate for the particular book.
+    def current_product_list(self):
+        now = datetime.datetime.now()
+        return self._query(dict((("year", now.year), ("month", now.month), ("day", now.day))))
 
-        Args:
-            book_title(str): Book's title.
-            rate(int) = Book rating points.
-        Raises:
-            Exception: if book with given title does not exist.
-        """
-        if not self._is_book_title_exists(book_title):
-            raise Exception("[ERROR]::There is no book with given title.")
-        book = Book.select(Book.q.bookName == book_title)[0]
-        book.bookRate = book.bookRate + " " + str(rate) if book.bookRate is not None else str(rate) 
-        rates = book.bookRate.split()
-        return reduce(lambda x, y: float(x) + float(y), rates) / len(rates) if len(rates) > 1 else rate
 
-    def _is_username_exists(self, username):
-        number = User.select(User.q.userName==username).count()
+    def total(self, kwargs):
+        products = self._query(kwargs)
+        if list(products) == []:
+            raise Exception("Sorry, but you do not have such records.")
+        return reduce(lambda x, y: x.energyPoints + y.energyPoints, products)
+
+
+    def should_consume(self):
+        user = User.select()[0]
+        if user.gender == 'male':
+            return (66.5 + 13.75 * user.weight + 5.003 * user.height - 6.775 * user.age)\
+                    * user.activity
+        return (655.1 + 9.563 * user.weight + 1.85 * user.height - 4.676 * user.age) * user.activity
+
+
+    def _is_user_exists(self):
+        number = User.select().count()
         return True if number > 0 else False
 
 
-    def _is_book_title_exists(self, book_title):
-        number = Book.select(Book.q.bookName==book_title).count()
+    def _is_product_exists(self, product_name, date):
+        number = Product.select(sqlobject.AND(Product.q.productName == product_name,\
+                                              Product.q.date == date)).count()
         return True if number > 0 else False
 
-    # this method created for test
-    def _show_list(self, lst):
-        return [str(item) for item in lst]
 
-
-if __name__ == "__main__":
-    doctest.testmod(extraglobs={"model": Model("storage", "pickle")})

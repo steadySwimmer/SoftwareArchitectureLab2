@@ -7,16 +7,15 @@ from configuration.configParser import *
 def establish_connection():
     """ Connect to the database """
     res_dict = config_parser_result()
-    db_filename = os.path.abspath("mdata.db")
 
     if res_dict[save_type_key] == "mysql":
-        connection_str = "mysql:" + db_filename
+        connection_str = "mysql://root:password@127.0.0.1/vpdb"
         conn = sqlobject.connectionForURI(connection_str)
     elif res_dict[save_type_key] == "sqll":
-        connection_str = "sqlite:" + db_filename
+        connection_str = "sqlite:" + os.path.abspath("mdata.db")
         conn = sqlobject.connectionForURI(connection_str)
     elif res_dict[save_type_key] == "psql":
-        connection_str = "postgres://host" + db_filename
+        connection_str = "mysql://test:www@127.0.0.1/sammy"
         conn = sqlobject.connectionForURI(connection_str)
 
     return conn
