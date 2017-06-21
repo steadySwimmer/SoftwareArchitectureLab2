@@ -137,9 +137,13 @@ class Controller:
 			return
 
 		if choice == 1:
-			today = datetime.datetime.now()
-			items, total = self.model.detailed_info(dict((("year", today.year),\
-													("month", today.month), ("day", today.day))))
+			try:
+				today = datetime.datetime.now()
+				items, total = self.model.detailed_info(dict((("year", today.year),\
+														("month", today.month), ("day", today.day))))
+			except Exception as err:
+				print(err)
+				return 
 		else:
 			try:
 				year = int(input("Year: "))
