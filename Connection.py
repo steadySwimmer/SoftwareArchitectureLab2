@@ -9,7 +9,7 @@ def establish_connection():
     res_dict = config_parser_result()
 
     if res_dict[save_type_key] == "mysql":
-        connection_str = "mysql://root:password@127.0.0.1/vpdb"
+        connection_str = "mysql://root:password@127.0.0.1/testdb"
         conn = sqlobject.connectionForURI(connection_str)
     elif res_dict[save_type_key] == "sqll":
         connection_str = "sqlite:" + os.path.abspath("mdata.db")

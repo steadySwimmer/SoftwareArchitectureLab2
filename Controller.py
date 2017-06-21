@@ -163,9 +163,13 @@ class Controller:
 			return
 		
 		if choice == 1:
-			today = datetime.datetime.now()
-			total = self.model.total(dict((("year", today.year),\
-									("month", today.month), ("day", today.day))))
+			try:
+				today = datetime.datetime.now()
+				total = self.model.total(dict((("year", today.year),\
+										("month", today.month), ("day", today.day))))
+			except Exception as e:
+				print(e)
+				return 
 		elif choice == 2:
 			try:
 				year = int(input("Year: "))

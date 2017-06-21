@@ -99,7 +99,8 @@ class Model():
         products = self._query(kwargs)
         if list(products) == []:
             raise Exception("Sorry, but you do not have such records.")
-        return reduce(lambda x, y: x.energyPoints + y.energyPoints, products)
+        return reduce(lambda x, y: x.energyPoints + y.energyPoints, products) if len(list(products)) > 1\
+                                                                            else products[0].energyPoints
 
 
     def should_consume(self):
